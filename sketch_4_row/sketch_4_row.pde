@@ -6,11 +6,26 @@
 
 int gameScreen = 0;
 int exit = 0;
+int posBtn1 = 0;
+boolean JugarOver;
 
 PFont font;
-PImage img;
+
 
 Circle [][] a = new Circle[7][6];
+
+// Array tablero
+int[][] tablero = new int[7][7];
+
+/********* IMAGES *********/
+
+PImage img_background;
+PImage img_btn_start;
+PImage img_btn_start_hover;
+PImage img_btn_exit;
+PImage img_btn_exit_hover;
+PImage img_piece1;
+PImage img_piece2;
 
 /********* SETUP BLOCK *********/
 
@@ -19,7 +34,9 @@ void setup() {
   smooth();
   
   font = loadFont("Monospaced-60.vlw");
-  img = loadImage("bg.jpg");
+  loadImg();
+
+  JugarOver=false;
   
   for (int i = 0; i < 7; i++) {
     for (int j = 0; j < 6; ++j) {
@@ -32,17 +49,21 @@ void setup() {
 
 void draw() {
   // Display the contents of the current screen
-  if (gameScreen == 0) { 
-    initScreen();
-  } else if (gameScreen == 1) { 
-    gameScreen();
+  switch(gameScreen){
+    case 0:
+      initScreen();
+      break;
+      
+    case 1:
+      gameScreen();
+      break;
   }
 }
 
 /********* SCREEN CONTENTS *********/
 
 void initScreen() { 
-  image(img, 0, 0);
+  image(img_background, 0, 0);
   tint(236, 240, 241);
  
   textAlign(CENTER);
@@ -50,11 +71,21 @@ void initScreen() {
   textFont(font, 60);
   rect(0, height/3, width, 155);
   shadowtext("+ Connect 4 +", width/2, height/2, 3);
+
+  image(img_btn_start, posBtn1, height/1.5);
+  
+  if(posBtn1 < width/2.9){
+    posBtn1 = posBtn1+20;
+  }
+
+  if (mouseX>=width/3 && mouseX<=width/3+120 && mouseY>=height/1.5 && mouseY<=height/1.5+47){
+    JugarOver=true;
+    image(img_btn_start_hover,posBtn1,height/1.5);
+  }
   
   fill(52, 73, 94);
-  textSize(12); 
-  text("Press '1' to start", width/2, height-100);
-  text("Press 'x' to exit", width/2, height-80);
+  textSize(11); 
+  text("Developed by Natalia Justicia", width/2, height-20);
 }
 
 void gameScreen() {
@@ -81,15 +112,22 @@ void drawTable() {
 
 /********* INPUTS *********/
 
-public void keyPressed() {
-  if (gameScreen == 0 || gameScreen == 1) { 
-    if (key == '1') {
-      startGame();
-    }
-    else if (key == 'x' || key == 'X') {
-      exit();
-    }
+public void mousePressed() {
+    if (gameScreen == 0) { 
+      if(JugarOver) {
+        startGame();
+      }
   }
+}
+
+/********* LOAD ASSETS *********/
+
+void loadImg() {
+  img_background = loadImage("bg.jpg");
+  img_btn_start = loadImage("btn_start.png");
+  img_btn_start_hover = loadImage("btn_start2.png");
+  img_piece1 = loadImage("ficha_1.png");
+  img_piece2 = loadImage("ficha_2.png");
 }
 
 /********* OTHER FUNCTIONS *********/
