@@ -4,18 +4,20 @@
 // 1: Game Screen
 // 2: Game-over Screen 
 
-int gameScreen = 0;
-int exit = 0;
-int posBtn1 = 0;
-boolean JugarOver;
+int game_screen = 0;
+int counter;
+int pos_btn1 = 0;
+int pos_btn2 = 450;
+int pos_piece = 0;
+boolean play = false;
+boolean exit = false;
 
+String text_title = "  Connect 4  ";
 PFont font;
 
-
+// Array table
 Circle [][] a = new Circle[7][6];
-
-// Array tablero
-int[][] tablero = new int[7][7];
+int[][] table = new int[7][7];
 
 /********* IMAGES *********/
 
@@ -31,12 +33,12 @@ PImage img_piece2;
 
 void setup() {
   size(600, 600);
+  frameRate(30);
   smooth();
   
   font = loadFont("Monospaced-60.vlw");
-  loadImg();
 
-  JugarOver=false;
+  loadImg();
   
   for (int i = 0; i < 7; i++) {
     for (int j = 0; j < 6; ++j) {
@@ -49,7 +51,7 @@ void setup() {
 
 void draw() {
   // Display the contents of the current screen
-  switch(gameScreen){
+  switch(game_screen){
     case 0:
       initScreen();
       break;
@@ -65,23 +67,32 @@ void draw() {
 void initScreen() { 
   image(img_background, 0, 0);
   tint(236, 240, 241);
- 
   textAlign(CENTER);
-  
   textFont(font, 60);
   rect(0, height/3, width, 155);
-  shadowtext("+ Connect 4 +", width/2, height/2, 3);
 
-  image(img_btn_start, posBtn1, height/1.5);
+  typewriteText();
   
-  if(posBtn1 < width/2.9){
-    posBtn1 = posBtn1+20;
+  // Pieces
+  image(img_piece1, 54, pos_piece);
+  image(img_piece2, 486, pos_piece);
+
+  // Buttons
+  image(img_btn_start, pos_btn1, height/1.5);
+  image(img_btn_exit, pos_btn2, height/1.3);
+  
+  // Movement
+  if(pos_btn1 < width/2.7){
+    pos_btn1 = pos_btn1+15;
+  }
+  if(pos_btn2 > width/2.6){
+    pos_btn2 = pos_btn2-15;
+  }
+  if(pos_piece < height/2.4) {
+    pos_piece = pos_piece+10;
   }
 
-  if (mouseX>=width/3 && mouseX<=width/3+120 && mouseY>=height/1.5 && mouseY<=height/1.5+47){
-    JugarOver=true;
-    image(img_btn_start_hover,posBtn1,height/1.5);
-  }
+  hoverBtn();
   
   fill(52, 73, 94);
   textSize(11); 
@@ -113,9 +124,12 @@ void drawTable() {
 /********* INPUTS *********/
 
 public void mousePressed() {
-    if (gameScreen == 0) { 
-      if(JugarOver) {
+    if (game_screen == 0) { 
+      if(play) {
         startGame();
+      } 
+      if (exit) {
+        exit();
       }
   }
 }
@@ -126,22 +140,46 @@ void loadImg() {
   img_background = loadImage("bg.jpg");
   img_btn_start = loadImage("btn_start.png");
   img_btn_start_hover = loadImage("btn_start2.png");
+  img_btn_exit = loadImage("btn_exit.png");
+  img_btn_exit_hover = loadImage("btn_exit2.png");
   img_piece1 = loadImage("ficha_1.png");
   img_piece2 = loadImage("ficha_2.png");
 }
 
 /********* OTHER FUNCTIONS *********/
 
-// This method sets the necessery variables to start the game  
+// Start the game  
 void startGame() {
-  gameScreen=1;
+  game_screen = 1;
 }
 
-void shadowtext (String s, float x, float y, int o) {
+// Shadow effect
+void shadowText (String s, float x, float y, int o) {
   fill(245, 100);
   text(s, x+o, y+o);
   fill(245);
   text(s, x, y);
+}
+
+// Txpewrite effect
+void typewriteText(){
+  if (counter < text_title.length())
+    counter++;
+    shadowText(text_title.substring(0, counter), width/2, height/2, 3);
+    delay(50);
+}
+
+// Hover effect
+void hoverBtn() {
+  if (mouseX >= width/2.7 && mouseX <= width/2.7+149 && mouseY >= height/1.5 && mouseY <= height/1.5+45){
+    exit = false;
+    play = true;
+    image(img_btn_start_hover, pos_btn1, height/1.5);
+  }
+  if (mouseX >= width/2.6 && mouseX <= width/2.6+149 && mouseY >= height/1.3 && mouseY <= height/1.3+45){
+    exit = true;
+    image(img_btn_exit_hover, pos_btn2, height/1.3);
+  }
 }
 
 /********* CLASS CIRCLE *********/
