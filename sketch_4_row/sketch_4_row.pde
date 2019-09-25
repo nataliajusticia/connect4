@@ -7,7 +7,7 @@
 int game_screen = 0;
 int counter;
 int pos_btn1 = 0;
-int pos_btn2 = 450;
+int pos_btn2 = 856;
 int pos_piece = 0;
 boolean play = false;
 boolean exit = false;
@@ -16,7 +16,6 @@ String text_title = "  Connect 4  ";
 PFont font;
 
 // Array table
-Circle [][] a = new Circle[7][6];
 int[][] table = new int[7][7];
 
 /********* IMAGES *********/
@@ -32,19 +31,12 @@ PImage img_piece2;
 /********* SETUP BLOCK *********/
 
 void setup() {
-  size(600, 600);
-  frameRate(30);
+  size(1000, 700);
   smooth();
   
   font = loadFont("Monospaced-60.vlw");
 
   loadImg();
-  
-  for (int i = 0; i < 7; i++) {
-    for (int j = 0; j < 6; ++j) {
-      a[i][j] = new Circle (50 + 100*(i), 50 + 100*(j), 90, color (255, 255, 255));
-    }
-  }
 }
 
 /********* DRAW BLOCK *********/
@@ -65,27 +57,28 @@ void draw() {
 /********* SCREEN CONTENTS *********/
 
 void initScreen() { 
+  background(236, 240, 241);
   image(img_background, 0, 0);
   tint(236, 240, 241);
   textAlign(CENTER);
   textFont(font, 60);
-  rect(0, height/3, width, 155);
+  rect(0, height/2.8, width, 155);
 
   typewriteText();
   
   // Pieces
-  image(img_piece1, 54, pos_piece);
-  image(img_piece2, 486, pos_piece);
+  image(img_piece1, 150, pos_piece);
+  image(img_piece2, 800, pos_piece);
 
   // Buttons
   image(img_btn_start, pos_btn1, height/1.5);
   image(img_btn_exit, pos_btn2, height/1.3);
   
   // Movement
-  if(pos_btn1 < width/2.7){
+  if(pos_btn1 < width/2.4){
     pos_btn1 = pos_btn1+15;
   }
-  if(pos_btn2 > width/2.6){
+  if(pos_btn2 > width/2.3){
     pos_btn2 = pos_btn2-15;
   }
   if(pos_piece < height/2.4) {
@@ -101,24 +94,13 @@ void initScreen() {
 
 void gameScreen() {
   drawTable();
-  stroke(0);
-  fill(0);
-  rect(212, 270, 180, 50);
-  fill(131);
-  rect(208, 267, 180, 50);
-  fill(0);
+  fill(245);
   textSize(20); 
   text("Coming soon...", width/2, height/2);
 }
 
 void drawTable() {
   background (52, 73, 94);
-  
-  for (int i = 0; i < 7; i++) {
-    for (int j = 0; j < 6; j++) {
-      a[i][j].render();
-    }
-  }
 }
 
 /********* INPUTS *********/
@@ -166,48 +148,17 @@ void typewriteText(){
   if (counter < text_title.length())
     counter++;
     shadowText(text_title.substring(0, counter), width/2, height/2, 3);
-    delay(50);
 }
 
 // Hover effect
 void hoverBtn() {
-  if (mouseX >= width/2.7 && mouseX <= width/2.7+149 && mouseY >= height/1.5 && mouseY <= height/1.5+45){
+  if (mouseX >= width/2.4 && mouseX <= width/2.4+149 && mouseY >= height/1.5 && mouseY <= height/1.5+45){
     exit = false;
     play = true;
     image(img_btn_start_hover, pos_btn1, height/1.5);
   }
-  if (mouseX >= width/2.6 && mouseX <= width/2.6+149 && mouseY >= height/1.3 && mouseY <= height/1.3+45){
+  if (mouseX >= width/2.3 && mouseX <= width/2.3+149 && mouseY >= height/1.3 && mouseY <= height/1.3+45){
     exit = true;
     image(img_btn_exit_hover, pos_btn2, height/1.3);
-  }
-}
-
-/********* CLASS CIRCLE *********/
-class Circle {
-  float x;
-  float y;
-
-  float diameter;
-  boolean isFilled; 
-
-  color fillColor;
-  color strokeColor;
-
-  Circle(float init_x, float init_y,
-  float init_diameter,
-  color init_color)
-  {
-    x = init_x;
-    y = init_y;
-    diameter = init_diameter;
-    fillColor = init_color;
-    strokeColor = init_color;
-    isFilled = false;
-  }
-
-  void render () {
-    fill (fillColor);
-    stroke (strokeColor);
-    ellipse (x, y, diameter, diameter);
   }
 }
