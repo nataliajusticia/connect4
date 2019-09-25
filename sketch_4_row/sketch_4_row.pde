@@ -11,12 +11,12 @@ int pos_btn2 = 856;
 int pos_piece = 0;
 boolean play = false;
 boolean exit = false;
+boolean home = false;
 
 String text_title = "  Connect 4  ";
 PFont font;
 
-// Array table
-int[][] table = new int[7][7];
+private Tile[][] piece = new Tile[6][7];
 
 /********* IMAGES *********/
 
@@ -25,6 +25,8 @@ PImage img_btn_start;
 PImage img_btn_start_hover;
 PImage img_btn_exit;
 PImage img_btn_exit_hover;
+PImage img_btn_home;
+PImage img_btn_home_hover;
 PImage img_piece1;
 PImage img_piece2;
 
@@ -37,6 +39,12 @@ void setup() {
   font = loadFont("Monospaced-60.vlw");
 
   loadImg();
+  
+  for(int r = 0; r < 6; r++) {
+    for(int c = 0; c < 7; c++) {
+      piece[r][c] = new Tile(140 + (c*70), 180 + (r*70));
+    }
+  }
 }
 
 /********* DRAW BLOCK *********/
@@ -94,26 +102,49 @@ void initScreen() {
 
 void gameScreen() {
   drawTable();
-  fill(245);
-  textSize(20); 
-  text("Coming soon...", width/2, height/2);
+  
+  image(img_btn_home, 900, 20);
+  
+  if (mouseX >= 900 && mouseX <= 900+50 && mouseY >= 20 && mouseY <= 20+50){
+    home = true;
+    image(img_btn_home_hover, 900, 20);
+  }
+  
+  fill(52, 73, 94);
+  textSize(11); 
+  text("Developed by Natalia Justicia", width/2, height-20);
 }
 
 void drawTable() {
-  background (52, 73, 94);
+  background(236, 240, 241);
+  image(img_background, 0, 0);
+  fill(52, 73, 94);
+  noStroke();
+  rect(100, 140, 502, 430);
+  
+  for(int r = 0; r < 6; r++) {
+    for(int c = 0; c < 7; c++) {
+      fill(piece[r][c].getColor());
+      ellipse(piece[r][c].getX(), piece[r][c].getY(), 60, 60);
+    }
+  }
 }
 
 /********* INPUTS *********/
 
 public void mousePressed() {
-    if (game_screen == 0) { 
-      if(play) {
-        startGame();
-      } 
-      if (exit) {
-        exit();
-      }
-  }
+  
+    if(play) {
+      startGame();
+    } 
+    if (exit) {
+      exit();
+    }
+
+
+      if(home) {
+      returnHome();
+    } 
 }
 
 /********* LOAD ASSETS *********/
@@ -124,6 +155,8 @@ void loadImg() {
   img_btn_start_hover = loadImage("btn_start2.png");
   img_btn_exit = loadImage("btn_exit.png");
   img_btn_exit_hover = loadImage("btn_exit2.png");
+  img_btn_home = loadImage("btn_home.png");
+  img_btn_home_hover = loadImage("btn_home2.png");
   img_piece1 = loadImage("ficha_1.png");
   img_piece2 = loadImage("ficha_2.png");
 }
@@ -133,6 +166,10 @@ void loadImg() {
 // Start the game  
 void startGame() {
   game_screen = 1;
+}
+
+void returnHome() {
+  game_screen = 0;
 }
 
 // Shadow effect
@@ -153,6 +190,7 @@ void typewriteText(){
 // Hover effect
 void hoverBtn() {
   if (mouseX >= width/2.4 && mouseX <= width/2.4+149 && mouseY >= height/1.5 && mouseY <= height/1.5+45){
+    home = false;
     exit = false;
     play = true;
     image(img_btn_start_hover, pos_btn1, height/1.5);
@@ -161,4 +199,17 @@ void hoverBtn() {
     exit = true;
     image(img_btn_exit_hover, pos_btn2, height/1.3);
   }
+}
+
+public class Tile {
+  private int myColor, myX, myY;
+  Tile(int x, int y) {
+    myColor = (220);
+    myX = x;
+    myY = y;
+  }
+  public int getColor() { return myColor; }
+  public void setColor(int mColor) { myColor = mColor; }
+  public int getX() { return myX; }
+  public int getY() { return myY; }
 }
