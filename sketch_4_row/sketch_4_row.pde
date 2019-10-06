@@ -1,9 +1,6 @@
 /***************************************
  VARIABLES 
-***************************************/
-// 
-// Jugador 1
-boolean player1_move = true;
+ ***************************************/
 // 
 // 0: Pantalla inicial
 // 1: Pantalla de juego
@@ -30,6 +27,16 @@ PFont font;
 // Tablero de juego
 private Tile[][] piece = new Tile[6][7];
 //
+// Jugadores
+boolean player = true;
+boolean move = false;
+boolean select = false;
+int fichas_j1 = 10;
+int fichas_j2 = 10;
+int column;
+int posX;
+int posY;
+//
 // Imagenes
 PImage img_background;
 PImage img_btn_start;
@@ -41,10 +48,9 @@ PImage img_btn_home_hover;
 PImage img_piece1;
 PImage img_piece2;
 
-
 /***************************************
  FUNCIONES DE INICIO
-***************************************/
+ ***************************************/
 
 /**
  * Función setup()
@@ -53,8 +59,6 @@ void setup() {
   size(1000, 700);
   frameRate(30);
   smooth();
-
-  font = loadFont("Monospaced-60.vlw");
 
   loadImg();
 
@@ -95,17 +99,18 @@ void draw() {
 
 /***************************************
  FUNCIONES DE PANTALLA
-***************************************/
+ ***************************************/
 
 /**
  * Función initScreen()
+ * Pantalla principal del juego - menu
  */
 void initScreen() { 
   rect(0, height/2.8, width, 155);
 
   // Titulo del juego
   textAlign(CENTER);
-  textFont(font, 60);
+  textSize(60);
   if (counter < text_title.length())
     counter++;
   shadowText(text_title.substring(0, counter), width/2, height/2, 3);
@@ -147,6 +152,7 @@ void initScreen() {
 
 /**
  * Función gameScreen()
+ * Pantalla de juego
  */
 void gameScreen() {
   drawTable();
@@ -167,10 +173,11 @@ void endGame() {
 
 /***************************************
  FUNCIONES DE DIBUJO
-***************************************/
+ ***************************************/
 
 /**
  * Función drawTable()
+ * Dibujo de la tabla, botones y fichas
  */
 void drawTable() {
   rect(100, 140, 502, 430, 25);
@@ -193,20 +200,21 @@ void drawTable() {
   }
 
   // Fichas
-  for (int i=1; i<=21; i++) {
-    image(img_piece1, 750, 100+20*i);
+  for (int i=1; i<=fichas_j1; i++) {
+    image(img_piece1, 750, 200+20*i);
   }
-  for (int i=1; i<=21; i++) {
-    image(img_piece2, 850, 100+20*i);
+  for (int i=1; i<=fichas_j2; i++) {
+    image(img_piece2, 850, 200+20*i);
   }
 }
 
 /***************************************
  FUNCIONES DE INTERACCION
-***************************************/
+ ***************************************/
 
 /**
  * Función mousePressed()
+ * Intercepta la pulsación de un botón del ratón
  */
 public void mousePressed() {
   if (btn_start) {
@@ -218,62 +226,136 @@ public void mousePressed() {
   if (btn_home) {
     game_screen = 0;
   }
+  if (select) {
+    move = true;
+  }
 }
 
 /***************************************
  FUNCIONES DE JUGADOR
-***************************************/
+ ***************************************/
 
 public void playGame() {
-  if (player1_move)
-    player1();
-  else
-    player2();
-}
+  if (player) {
+    fill(52, 73, 94);
+    text("Turno del Jugador 1", 800, 50);
 
-void player1() {
-  fill(52, 73, 94);
-  text("Turn of Player 1", 800, 70);
+    if (mouseX > 110 && mouseX < 590 || move == true) {
+      if (move == false) {
+        image(img_piece1, mouseX-31, 70);
 
-  if (mouseX > 110 && mouseX < 170)
-    image(img_piece1, 110, 70);
-  else if (mouseX > 180 && mouseX < 240)
-    image(img_piece1, 180, 70);
-  else if (mouseX > 250 && mouseX < 310)
-    image(img_piece1, 250, 70);
-  else if (mouseX > 320 && mouseX < 380)
-    image(img_piece1, 320, 70);
-  else if (mouseX > 390 && mouseX < 450)
-    image(img_piece1, 390, 70);
-  else if (mouseX > 460 && mouseX < 520)
-    image(img_piece1, 460, 70);  
-  else if (mouseX > 530 && mouseX < 590)
-    image(img_piece1, 530, 70);
-}
+        if (mouseX > 110 && mouseX < 170) {
+          select = true;
+          column = 1;
+        } else if (mouseX > 180 && mouseX < 240) {
+          column = 2;
+          select = true;
+        } else if (mouseX > 250 && mouseX < 310) {
+          column = 3;
+          select = true;
+        } else if (mouseX > 320 && mouseX < 380) {
+          column = 4;
+          select = true;
+        } else if (mouseX > 390 && mouseX < 450) {
+          select = true;
+          column = 5;
+        } else if (mouseX > 460 && mouseX < 520) {
+          column = 6;
+          select = true;
+        } else if (mouseX > 530 && mouseX < 590) {
+          column = 7;
+          select = true;
+        }
+      } else {
+        switch (column) {
+        case 1:
+          posX = 110;
+          break;
+        case 2:
+          posX = 180;
+          break;
+        case 3:
+          posX = 250;
+          break;
+        case 4:
+          posX = 320;
+          break;
+        case 5:
+          posX = 390;
+          break;
+        case 6:
+          posX = 460;
+          break;
+        case 7:
+          posX = 530;
+          break;
+        }
+        image(img_piece1, posX, 499);
+      }
+    }
+  } else {
+    fill(52, 73, 94);
+    text("Turno del Jugador 2", 800, 50);
 
-void player2() {
-  fill(52, 73, 94);
-  text("Turn of Player 2", 800, 70);
+    if (mouseX > 110 && mouseX < 590) {
+      if (move == false) {
+        image(img_piece2, mouseX-31, 70);
 
-  if (mouseX > 110 && mouseX < 170)
-    image(img_piece2, 110, 70);
-  else if (mouseX > 180 && mouseX < 240)
-    image(img_piece2, 180, 70);
-  else if (mouseX > 250 && mouseX < 310)
-    image(img_piece2, 250, 70);
-  else if (mouseX > 320 && mouseX < 380)
-    image(img_piece2, 320, 70);
-  else if (mouseX > 390 && mouseX < 450)
-    image(img_piece2, 390, 70);
-  else if (mouseX > 460 && mouseX < 520)
-    image(img_piece2, 460, 70);  
-  else if (mouseX > 530 && mouseX < 590)
-    image(img_piece2, 530, 70);
+        if (mouseX > 110 && mouseX < 170) {
+          select = true;
+          column = 1;
+        } else if (mouseX > 180 && mouseX < 240) {
+          column = 2;
+          select = true;
+        } else if (mouseX > 250 && mouseX < 310) {
+          column = 3;
+          select = true;
+        } else if (mouseX > 320 && mouseX < 380) {
+          column = 4;
+          select = true;
+        } else if (mouseX > 390 && mouseX < 450) {
+          select = true;
+          column = 5;
+        } else if (mouseX > 460 && mouseX < 520) {
+          column = 6;
+          select = true;
+        } else if (mouseX > 530 && mouseX < 590) {
+          column = 7;
+          select = true;
+        }
+      } else {
+        switch (column) {
+        case 1:
+          posX = 110;
+          break;
+        case 2:
+          posX = 180;
+          break;
+        case 3:
+          posX = 250;
+          break;
+        case 4:
+          posX = 320;
+          break;
+        case 5:
+          posX = 390;
+          break;
+        case 6:
+          posX = 460;
+          break;
+        case 7:
+          posX = 530;
+          break;
+        }
+        image(img_piece2, posX, 499);
+      }
+    }
+  }
 }
 
 /***************************************
  FUNCIONES DE EFECTOS
-***************************************/
+ ***************************************/
 
 void shadowText (String s, float x, float y, int o) {
   fill(245, 100);
@@ -294,10 +376,9 @@ void loadImg() {
   img_piece2 = loadImage("ficha_2.png");
 }
 
-
 /***************************************
  CLASE TILE
-***************************************/
+ ***************************************/
 
 public class Tile {
   private int myColor, myX, myY;
@@ -308,9 +389,6 @@ public class Tile {
   }
   public int getColor() { 
     return myColor;
-  }
-  public void setColor(int mColor) { 
-    myColor = mColor;
   }
   public int getX() { 
     return myX;
