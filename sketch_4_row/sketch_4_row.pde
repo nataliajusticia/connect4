@@ -25,15 +25,17 @@ int counter;
 PFont font;
 //
 // Tablero de juego
-private Tile[][] piece = new Tile[6][7];
+int[][] table = new int[7][6];
 //
 // Jugadores
 boolean player = true;
 boolean move = false;
 boolean select = false;
+int casillas_ocupadas = 1;
 int fichas_j1 = 10;
 int fichas_j2 = 10;
 int column;
+int row = 0;
 int posX;
 int posY;
 //
@@ -61,12 +63,6 @@ void setup() {
   smooth();
 
   loadImg();
-
-  for (int r = 0; r < 6; r++) {
-    for (int c = 0; c < 7; c++) {
-      piece[r][c] = new Tile(140 + (c*70), 180 + (r*70));
-    }
-  }
 }
 
 /**
@@ -180,7 +176,7 @@ void endGame() {
  * Dibujo de la tabla, botones y fichas
  */
 void drawTable() {
-  rect(100, 140, 502, 430, 25);
+  rect(100, 140, 505, 430, 25);
 
   // Botón
   image(img_btn_home, 900, 20);
@@ -194,8 +190,8 @@ void drawTable() {
   // Tablero
   for (int r = 0; r < 6; r++) {
     for (int c = 0; c < 7; c++) {
-      fill(piece[r][c].getColor());
-      ellipse(piece[r][c].getX(), piece[r][c].getY(), 60, 60);
+      fill(255);
+      ellipse(151+r*80, 180+c*70, 60, 60);
     }
   }
 
@@ -240,114 +236,122 @@ public void playGame() {
     fill(52, 73, 94);
     text("Turno del Jugador 1", 800, 50);
 
-    if (mouseX > 110 && mouseX < 590 || move == true) {
+    if (mouseX > 120 && mouseX < 600 || move == true) {
       if (move == false) {
         image(img_piece1, mouseX-31, 70);
 
-        if (mouseX > 110 && mouseX < 170) {
+        if (mouseX > 120 && mouseX < 180) {
           select = true;
           column = 1;
-        } else if (mouseX > 180 && mouseX < 240) {
+        } else if (mouseX > 200 && mouseX < 260) {
           column = 2;
           select = true;
-        } else if (mouseX > 250 && mouseX < 310) {
+        } else if (mouseX > 280 && mouseX < 340) {
           column = 3;
           select = true;
-        } else if (mouseX > 320 && mouseX < 380) {
+        } else if (mouseX > 360 && mouseX < 420) {
           column = 4;
           select = true;
-        } else if (mouseX > 390 && mouseX < 450) {
+        } else if (mouseX > 440 && mouseX < 500) {
           select = true;
           column = 5;
-        } else if (mouseX > 460 && mouseX < 520) {
+        } else if (mouseX > 520 && mouseX < 580) {
           column = 6;
           select = true;
-        } else if (mouseX > 530 && mouseX < 590) {
+        } else if (mouseX > 600 && mouseX < 660) {
           column = 7;
           select = true;
         }
       } else {
         switch (column) {
         case 1:
-          posX = 110;
+          posX = 120;
           break;
         case 2:
-          posX = 180;
+          posX = 200;
           break;
         case 3:
-          posX = 250;
+          posX = 280;
           break;
         case 4:
-          posX = 320;
+          posX = 360;
           break;
         case 5:
-          posX = 390;
+          posX = 440;
           break;
         case 6:
-          posX = 460;
+          posX = 520;
           break;
         case 7:
-          posX = 530;
+          posX = 600;
           break;
         }
-        image(img_piece1, posX, 499);
+        image(img_piece1, posX, 500);
+        fichas_j1 = fichas_j1 - 1;
+        move = false;
+        player = false;
+        select = false;
       }
     }
   } else {
     fill(52, 73, 94);
     text("Turno del Jugador 2", 800, 50);
 
-    if (mouseX > 110 && mouseX < 590) {
+    if (mouseX > 120 && mouseX < 600) {
       if (move == false) {
         image(img_piece2, mouseX-31, 70);
 
-        if (mouseX > 110 && mouseX < 170) {
+        if (mouseX > 120 && mouseX < 180) {
           select = true;
           column = 1;
-        } else if (mouseX > 180 && mouseX < 240) {
+        } else if (mouseX > 200 && mouseX < 260) {
           column = 2;
           select = true;
-        } else if (mouseX > 250 && mouseX < 310) {
+        } else if (mouseX > 280 && mouseX < 340) {
           column = 3;
           select = true;
-        } else if (mouseX > 320 && mouseX < 380) {
+        } else if (mouseX > 360 && mouseX < 420) {
           column = 4;
           select = true;
-        } else if (mouseX > 390 && mouseX < 450) {
+        } else if (mouseX > 440 && mouseX < 500) {
           select = true;
           column = 5;
-        } else if (mouseX > 460 && mouseX < 520) {
+        } else if (mouseX > 520 && mouseX < 580) {
           column = 6;
           select = true;
-        } else if (mouseX > 530 && mouseX < 590) {
+        } else if (mouseX > 600 && mouseX < 660) {
           column = 7;
           select = true;
         }
       } else {
         switch (column) {
         case 1:
-          posX = 110;
+          posX = 120;
           break;
         case 2:
-          posX = 180;
+          posX = 200;
           break;
         case 3:
-          posX = 250;
+          posX = 280;
           break;
         case 4:
-          posX = 320;
+          posX = 360;
           break;
         case 5:
-          posX = 390;
+          posX = 440;
           break;
         case 6:
-          posX = 460;
+          posX = 520;
           break;
         case 7:
-          posX = 530;
+          posX = 600;
           break;
         }
-        image(img_piece2, posX, 499);
+        image(img_piece2, posX, 500);
+        fichas_j2 = fichas_j2 - 1;
+        move = false;
+        player = true;
+        select = false;
       }
     }
   }
@@ -374,26 +378,4 @@ void loadImg() {
   img_btn_home_hover = loadImage("btn_home2.png");
   img_piece1 = loadImage("ficha_1.png");
   img_piece2 = loadImage("ficha_2.png");
-}
-
-/***************************************
- CLASE TILE
- ***************************************/
-
-public class Tile {
-  private int myColor, myX, myY;
-  Tile(int x, int y) {
-    myColor = (220);
-    myX = x;
-    myY = y;
-  }
-  public int getColor() { 
-    return myColor;
-  }
-  public int getX() { 
-    return myX;
-  }
-  public int getY() { 
-    return myY;
-  }
 }
