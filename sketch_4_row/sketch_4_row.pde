@@ -369,6 +369,7 @@ public void playGame() {
         if (posY < 500-60*casillas_ocupadas) {
           posY = posY+35;
         } else {
+          fichas_j2 = fichas_j2 - 1;
           move = false;
           player = true;
           select = false;
