@@ -32,8 +32,8 @@ boolean player = true;
 boolean move = false;
 boolean select = false;
 int locked = 1;
-int fichas_j1 = 10;
-int fichas_j2 = 10;
+int fichas_j1 = 2;
+int fichas_j2 = 2;
 int column;
 int row = 0;
 int posX;
@@ -164,6 +164,13 @@ void checkGame() {
  * Función endGame()
  */
 void endGame() {
+  rect(0, height/2.8, width, 155);
+  fill(255);
+
+  // Titulo del juego
+  textAlign(CENTER);
+  textSize(60);
+  text("No hay ganadores", width/2, height/2);
 }
 
 /***************************************
@@ -392,6 +399,9 @@ public void playGame() {
         }
       }
     }
+  }
+  if (fichas_j1 == 0 && fichas_j2 == 0) {
+    game_screen = 3;
   }
 }
 
