@@ -388,15 +388,6 @@ void endGame() {
   } else {
     text("Tablas", width/2, height/2);
   }
-
-  move = false;
-  select = false;
-  player = true;
-  locked = 1;
-  fichas_j1 = 10;
-  fichas_j2 = 10;
-  row = 0;
-  posY = 60;
 }
 
 /***************************************
@@ -463,6 +454,14 @@ public void mousePressed() {
     exit();
   }
   if (btn_home) {
+    move = false;
+    select = false;
+    player = true;
+    locked = 1;
+    fichas_j1 = 10;
+    fichas_j2 = 10;
+    row = 0;
+    posY = 60;
     game_screen = 0;
   }
   if (select) {
