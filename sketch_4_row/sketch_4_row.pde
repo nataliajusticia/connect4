@@ -28,12 +28,16 @@ PFont font;
 int[][] table = new int[7][6];
 //
 // Jugadores
-boolean player = true;
 boolean move = false;
 boolean select = false;
+boolean player = true;
+boolean winner1 = false;
+boolean winner2 = false;
 int locked = 1;
-int fichas_j1 = 2;
-int fichas_j2 = 2;
+int win_check1 = 0;
+int win_check2 = 0;
+int fichas_j1 = 10;
+int fichas_j2 = 10;
 int column;
 int row = 0;
 int posX;
@@ -100,7 +104,7 @@ void draw() {
  * Función initScreen()
  * Pantalla principal del juego - menu
  */
-void initScreen() { 
+void initScreen() {
   rect(0, height/2.8, width, 155);
 
   // Titulo del juego
@@ -143,6 +147,12 @@ void initScreen() {
   } else {
     btn_exit = false;
   }
+
+  for (int i=0; i<7; i++) {
+    for (int j=0; j<6; j++) {
+      table[i][j]= 0;
+    }
+  }
 }
 
 /**
@@ -151,26 +161,242 @@ void initScreen() {
  */
 void gameScreen() {
   drawTable();
-  playGame();
+
+  row = 0;
+
+  if (player == true) {
+    fill(52, 73, 94);
+    text("Turno del Jugador 1", 800, 50);
+
+    if (mouseX > 120 && mouseX < 660 || move == true) {
+      if (move == false) {
+        image(img_piece1, mouseX-31, posY);
+
+        if (mouseX > 120 && mouseX < 180) {
+          select = true;
+          column = 0;
+        } else if (mouseX > 200 && mouseX < 260) {
+          select = true;
+          column = 1;
+        } else if (mouseX > 280 && mouseX < 340) {
+          select = true;
+          column = 2;
+        } else if (mouseX > 360 && mouseX < 420) {
+          select = true;
+          column = 3;
+        } else if (mouseX > 440 && mouseX < 500) {
+          select = true;
+          column = 4;
+        } else if (mouseX > 520 && mouseX < 580) {
+          select = true;
+          column = 5;
+        } else if (mouseX > 600 && mouseX < 660) {
+          select = true;
+          column = 6;
+        }
+      } else {
+        switch (column) {
+        case 0:
+          posX = 120;
+          break;
+        case 1:
+          posX = 200;
+          break;
+        case 2:
+          posX = 280;
+          break;
+        case 3:
+          posX = 360;
+          break;
+        case 4:
+          posX = 440;
+          break;
+        case 5:
+          posX = 520;
+          break;
+        case 6:
+          posX = 600;
+          break;
+        }
+        image(img_piece1, posX, posY);
+
+        for (int i=0; i<6; i++) {
+          if (table[column][i] == 1 || table[column][i] == 2) {
+            locked = i+2;
+            row = i+1;
+          }
+        }
+        if (posY < 500-60*locked) {
+          posY = posY+35;
+        } else {
+          fichas_j1 = fichas_j1 - 1;
+          move = false;
+          select = false;
+          player = false;
+          posY = 60;
+          table[column][row] = 1;
+          locked = 1;
+          game_screen = 2;
+        }
+      }
+    }
+  } else {
+    fill(52, 73, 94);
+    text("Turno del Jugador 2", 800, 50);
+
+    if (mouseX > 120 && mouseX < 660  || move == true) {
+      if (move == false) {
+        image(img_piece2, mouseX-31, posY);
+
+        if (mouseX > 120 && mouseX < 180) {
+          select = true;
+          column = 0;
+        } else if (mouseX > 200 && mouseX < 260) {
+          select = true;
+          column = 1;
+        } else if (mouseX > 280 && mouseX < 340) {
+          select = true;
+          column = 2;
+        } else if (mouseX > 360 && mouseX < 420) {
+          select = true;
+          column = 3;
+        } else if (mouseX > 440 && mouseX < 500) {
+          select = true;
+          column = 4;
+        } else if (mouseX > 520 && mouseX < 580) {
+          select = true;
+          column = 5;
+        } else if (mouseX > 600 && mouseX < 660) {
+          select = true;
+          column = 6;
+        }
+      } else {
+        switch (column) {
+        case 0:
+          posX = 120;
+          break;
+        case 1:
+          posX = 200;
+          break;
+        case 2:
+          posX = 280;
+          break;
+        case 3:
+          posX = 360;
+          break;
+        case 4:
+          posX = 440;
+          break;
+        case 5:
+          posX = 520;
+          break;
+        case 6:
+          posX = 600;
+          break;
+        }
+        image(img_piece2, posX, posY);
+        for (int i=0; i<6; i++) {
+          if (table[column][i] == 1 || table[column][i] == 2) {
+            locked = i+2;
+            row = i+1;
+          }
+        }
+        if (posY < 500-60*locked) {
+          posY = posY+35;
+        } else {
+          fichas_j2 = fichas_j2 - 1;
+          move = false;
+          select = false;
+          player = true;
+          posY = 60;  
+          table[column][row] = 2;
+          locked = 1;
+          game_screen = 2;
+        }
+      }
+    }
+  }
+  if (fichas_j1 == 0 && fichas_j2 == 0) {
+    game_screen = 3;
+  }
 }
 
 /**
  * Función checkGame()
  */
 void checkGame() {
+
+  // 4 en raya vertical
+  for (int i=0; i<7; i++) {
+    for (int j=0; j<6; j++) {
+      if (table[i][j] == 1) {
+        win_check1 = win_check1+1;
+
+        if (win_check1 == 4) {
+          winner1 = true;
+          winner2 = false;
+          game_screen = 3;
+        }
+      } else if (table[i][j] == 2) {
+        win_check2 = win_check2+1;
+
+        if (win_check2 == 4) {
+          winner1 = false;
+          winner2 = true;
+          game_screen = 3;
+        }
+      } else {
+        win_check1 = 0;
+        win_check2 = 0;
+      }
+    }
+  }
+
+  gameScreen();
 }
 
 /**
  * Función endGame()
  */
 void endGame() {
+  for (int i=0; i<7; i++) {
+    for (int j=0; j<6; j++) {
+      table[i][j]= 0;
+    }
+  }
+
+  // Botón
+  image(img_btn_home, 900, 20);
+  if (mouseX >= 900 && mouseX <= 900+50 && mouseY >= 20 && mouseY <= 20+50) {
+    btn_home = true;
+    image(img_btn_home_hover, 900, 20);
+  } else {
+    btn_home = false;
+  }
+
   rect(0, height/2.8, width, 155);
   fill(255);
 
   // Titulo del juego
   textAlign(CENTER);
   textSize(60);
-  text("No hay ganadores", width/2, height/2);
+
+  if (winner1) {
+    text("El jugador 1 gana", width/2, height/2);
+  } else if (winner2) {
+    text("El jugador 2 gana", width/2, height/2);
+  } else {
+    text("Tablas", width/2, height/2);
+  }
+
+  move = false;
+  select = false;
+  player = true;
+  locked = 1;
+  fichas_j1 = 10;
+  fichas_j2 = 10;
+  row = 0;
+  posY = 60;
 }
 
 /***************************************
@@ -241,167 +467,6 @@ public void mousePressed() {
   }
   if (select) {
     move = true;
-  }
-}
-
-/***************************************
- FUNCIONES DE JUGADOR
- ***************************************/
-
-public void playGame() {
-  row = 0;
-
-  if (player) {
-    fill(52, 73, 94);
-    text("Turno del Jugador 1", 800, 50);
-
-    if (mouseX > 120 && mouseX < 660 || move == true) {
-      if (move == false) {
-        image(img_piece1, mouseX-31, posY);
-
-        if (mouseX > 120 && mouseX < 180) {
-          select = true;
-          column = 0;
-        } else if (mouseX > 200 && mouseX < 260) {
-          select = true;
-          column = 1;
-        } else if (mouseX > 280 && mouseX < 340) {
-          select = true;
-          column = 2;
-        } else if (mouseX > 360 && mouseX < 420) {
-          select = true;
-          column = 3;
-        } else if (mouseX > 440 && mouseX < 500) {
-          select = true;
-          column = 4;
-        } else if (mouseX > 520 && mouseX < 580) {
-          select = true;
-          column = 5;
-        } else if (mouseX > 600 && mouseX < 660) {
-          select = true;
-          column = 6;
-        }
-      } else {
-        switch (column) {
-        case 0:
-          posX = 120;
-          break;
-        case 1:
-          posX = 200;
-          break;
-        case 2:
-          posX = 280;
-          break;
-        case 3:
-          posX = 360;
-          break;
-        case 4:
-          posX = 440;
-          break;
-        case 5:
-          posX = 520;
-          break;
-        case 6:
-          posX = 600;
-          break;
-        }
-        image(img_piece1, posX, posY);
-        for (int i=0; i<6; i++) {
-          if (table[column][i] == 1 || table[column][i] == 2) {
-            locked = i+2;
-            row = i+1;
-          }
-        }
-        if (posY < 500-60*locked) {
-          posY = posY+35;
-        } else {
-          fichas_j1 = fichas_j1 - 1;
-          move = false;
-          player = false;
-          select = false;
-          posY = 60;
-          table[column][row] = 1;
-          locked = 1;
-        }
-      }
-    }
-  } else {
-    fill(52, 73, 94);
-    text("Turno del Jugador 2", 800, 50);
-
-    if (mouseX > 120 && mouseX < 660  || move == true) {
-      if (move == false) {
-        image(img_piece2, mouseX-31, posY);
-
-        if (mouseX > 120 && mouseX < 180) {
-          select = true;
-          column = 0;
-        } else if (mouseX > 200 && mouseX < 260) {
-          select = true;
-          column = 1;
-        } else if (mouseX > 280 && mouseX < 340) {
-          select = true;
-          column = 2;
-        } else if (mouseX > 360 && mouseX < 420) {
-          select = true;
-          column = 3;
-        } else if (mouseX > 440 && mouseX < 500) {
-          select = true;
-          column = 4;
-        } else if (mouseX > 520 && mouseX < 580) {
-          select = true;
-          column = 5;
-        } else if (mouseX > 600 && mouseX < 660) {
-          select = true;
-          column = 6;
-        }
-      } else {
-        switch (column) {
-        case 0:
-          posX = 120;
-          break;
-        case 1:
-          posX = 200;
-          break;
-        case 2:
-          posX = 280;
-          break;
-        case 3:
-          posX = 360;
-          break;
-        case 4:
-          posX = 440;
-          break;
-        case 5:
-          posX = 520;
-          break;
-        case 6:
-          posX = 600;
-          break;
-        }
-        image(img_piece2, posX, posY);
-        for (int i=0; i<6; i++) {
-          if (table[column][i] == 1 || table[column][i] == 2) {
-            locked = i+2;
-            row = i+1;
-          }
-        }
-        if (posY < 500-60*locked) {
-          posY = posY+35;
-        } else {
-          fichas_j2 = fichas_j2 - 1;
-          move = false;
-          player = true;
-          select = false;
-          posY = 60;  
-          table[column][row] = 2;
-          locked = 1;
-        }
-      }
-    }
-  }
-  if (fichas_j1 == 0 && fichas_j2 == 0) {
-    game_screen = 3;
   }
 }
 
