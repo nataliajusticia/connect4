@@ -242,12 +242,12 @@ public void mousePressed() {
  ***************************************/
 
 public void playGame() {
-  row =0;
+  row = 0;
   if (player) {
     fill(52, 73, 94);
     text("Turno del Jugador 1", 800, 50);
 
-    if (mouseX > 120 && mouseX < 600 || move == true) {
+    if (mouseX > 120 && mouseX < 580 || move == true) {
       if (move == false) {
         image(img_piece1, mouseX-31, posY);
 
@@ -255,23 +255,20 @@ public void playGame() {
           select = true;
           column = 1;
         } else if (mouseX > 200 && mouseX < 260) {
+          select = true;
           column = 2;
-          select = true;
         } else if (mouseX > 280 && mouseX < 340) {
+          select = true;
           column = 3;
-          select = true;
         } else if (mouseX > 360 && mouseX < 420) {
-          column = 4;
           select = true;
+          column = 4;
         } else if (mouseX > 440 && mouseX < 500) {
           select = true;
           column = 5;
         } else if (mouseX > 520 && mouseX < 580) {
+          select = true;
           column = 6;
-          select = true;
-        } else if (mouseX > 600 && mouseX < 660) {
-          column = 7;
-          select = true;
         }
       } else {
         switch (column) {
@@ -293,9 +290,6 @@ public void playGame() {
         case 6:
           posX = 520;
           break;
-        case 7:
-          posX = 600;
-          break;
         }
         image(img_piece1, posX, posY);
         for (int i=0; i<6; i++) {
@@ -304,8 +298,8 @@ public void playGame() {
             row = i+1;
           }
         }
-        if (posY<580-60*casillas_ocupadas) {//se anima la caida
-          posY=posY+35;
+        if (posY < 500-60*casillas_ocupadas) {
+          posY = posY+35;
         } else {
           fichas_j1 = fichas_j1 - 1;
           move = false;
@@ -321,7 +315,7 @@ public void playGame() {
     fill(52, 73, 94);
     text("Turno del Jugador 2", 800, 50);
 
-    if (mouseX > 120 && mouseX < 600) {
+    if (mouseX > 120 && mouseX < 580) {
       if (move == false) {
         image(img_piece2, mouseX-31, posY);
 
@@ -329,23 +323,20 @@ public void playGame() {
           select = true;
           column = 1;
         } else if (mouseX > 200 && mouseX < 260) {
+          select = true;
           column = 2;
-          select = true;
         } else if (mouseX > 280 && mouseX < 340) {
+          select = true;
           column = 3;
-          select = true;
         } else if (mouseX > 360 && mouseX < 420) {
-          column = 4;
           select = true;
+          column = 4;
         } else if (mouseX > 440 && mouseX < 500) {
           select = true;
           column = 5;
         } else if (mouseX > 520 && mouseX < 580) {
+          select = true;
           column = 6;
-          select = true;
-        } else if (mouseX > 600 && mouseX < 660) {
-          column = 7;
-          select = true;
         }
       } else {
         switch (column) {
@@ -367,24 +358,24 @@ public void playGame() {
         case 6:
           posX = 520;
           break;
-        case 7:
-          posX = 600;
-          break;
         }
         image(img_piece2, posX, posY);
-        fichas_j2 = fichas_j2 - 1;
         for (int i=0; i<6; i++) {
           if (table[column][i] == 1 || table[column][i] == 2) {
             casillas_ocupadas = i+2;
             row = i+1;
           }
         }
-        move = false;
-        player = true;
-        select = false;
-        posY = 60;  
-        table[column][row] = 2;
-        casillas_ocupadas = 1;
+        if (posY < 500-60*casillas_ocupadas) {
+          posY = posY+35;
+        } else {
+          move = false;
+          player = true;
+          select = false;
+          posY = 60;  
+          table[column][row] = 2;
+          casillas_ocupadas = 1;
+        }
       }
     }
   }
