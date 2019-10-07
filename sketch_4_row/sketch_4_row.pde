@@ -37,7 +37,7 @@ int fichas_j2 = 10;
 int column;
 int row = 0;
 int posX;
-int posY;
+int posY = 60;
 //
 // Imagenes
 PImage img_background;
@@ -191,16 +191,16 @@ void drawTable() {
   for (int r = 0; r < 6; r++) {
     for (int c = 0; c < 7; c++) {
       fill(255);
-      ellipse(151+r*80, 180+c*70, 60, 60);
+      ellipse(151+r*80, 180+c*70, 62, 62);
     }
   }
 
   for (int i=0; i<7; i++) {
     for (int j=0; j<6; j++) {
       if (table[i][j]==1) {
-        image(img_piece1, (i+1)*80-40, 500*(j+1));
+        image(img_piece1, (i+1)*80-40, 569-70*(j+1));
       } else if (table[i][j]==2) {
-        image(img_piece2, (i+1)*80-40, 500*(j+1));
+        image(img_piece2, (i+1)*80-40, 569-70*(j+1));
       }
     }
   }
@@ -249,7 +249,7 @@ public void playGame() {
 
     if (mouseX > 120 && mouseX < 600 || move == true) {
       if (move == false) {
-        image(img_piece1, mouseX-31, 70);
+        image(img_piece1, mouseX-31, posY);
 
         if (mouseX > 120 && mouseX < 180) {
           select = true;
@@ -297,13 +297,24 @@ public void playGame() {
           posX = 600;
           break;
         }
-        image(img_piece1, posX, 500);
-        fichas_j1 = fichas_j1 - 1;
-        move = false;
-        player = false;
-        select = false;
-        table[column][row]=1;
-        casillas_ocupadas=1;
+        image(img_piece1, posX, posY);
+        for (int i=0; i<6; i++) {
+          if (table[column][i] == 1 || table[column][i] == 2) {
+            casillas_ocupadas = i+2;
+            row = i+1;
+          }
+        }
+        if (posY<580-60*casillas_ocupadas) {//se anima la caida
+          posY=posY+35;
+        } else {
+          fichas_j1 = fichas_j1 - 1;
+          move = false;
+          player = false;
+          select = false;
+          posY = 60;
+          table[column][row] = 1;
+          casillas_ocupadas = 1;
+        }
       }
     }
   } else {
@@ -312,7 +323,7 @@ public void playGame() {
 
     if (mouseX > 120 && mouseX < 600) {
       if (move == false) {
-        image(img_piece2, mouseX-31, 70);
+        image(img_piece2, mouseX-31, posY);
 
         if (mouseX > 120 && mouseX < 180) {
           select = true;
@@ -360,11 +371,18 @@ public void playGame() {
           posX = 600;
           break;
         }
-        image(img_piece2, posX, 500);
+        image(img_piece2, posX, posY);
         fichas_j2 = fichas_j2 - 1;
+        for (int i=0; i<6; i++) {
+          if (table[column][i] == 1 || table[column][i] == 2) {
+            casillas_ocupadas = i+2;
+            row = i+1;
+          }
+        }
         move = false;
         player = true;
         select = false;
+        posY = 60;  
         table[column][row] = 2;
         casillas_ocupadas = 1;
       }
