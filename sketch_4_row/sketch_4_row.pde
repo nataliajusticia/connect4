@@ -195,6 +195,16 @@ void drawTable() {
     }
   }
 
+  for (int i=0; i<7; i++) {
+    for (int j=0; j<6; j++) {
+      if (table[i][j]==1) {
+        image(img_piece1, (i+1)*80-40, 500*(j+1));
+      } else if (table[i][j]==2) {
+        image(img_piece2, (i+1)*80-40, 500*(j+1));
+      }
+    }
+  }
+
   // Fichas
   for (int i=1; i<=fichas_j1; i++) {
     image(img_piece1, 750, 200+20*i);
@@ -232,6 +242,7 @@ public void mousePressed() {
  ***************************************/
 
 public void playGame() {
+  row =0;
   if (player) {
     fill(52, 73, 94);
     text("Turno del Jugador 1", 800, 50);
@@ -291,6 +302,8 @@ public void playGame() {
         move = false;
         player = false;
         select = false;
+        table[column][row]=1;
+        casillas_ocupadas=1;
       }
     }
   } else {
@@ -352,6 +365,8 @@ public void playGame() {
         move = false;
         player = true;
         select = false;
+        table[column][row] = 2;
+        casillas_ocupadas = 1;
       }
     }
   }
