@@ -113,7 +113,7 @@ void initScreen() {
   textSize(60);
   if (counter < text_title.length())
     counter++;
-  shadowText(text_title.substring(0, counter), width/2, height/2, 3);
+    shadowText(text_title.substring(0, counter), width/2, height/2, 3);
 
   // Fichas del juego
   image(img_piece1, 150, pos_piece);
@@ -223,7 +223,7 @@ void gameScreen() {
         }
 
         if (posY < 500-60*locked) {
-          posY = posY+35;
+          posY = posY+30;
         } else {
           fichas_j1 = fichas_j1 - 1;
           move = false;
@@ -300,7 +300,7 @@ void gameScreen() {
         }
 
         if (posY < 500-60*locked) {
-          posY = posY+35;
+          posY = posY+30;
         } else {
           fichas_j2 = fichas_j2 - 1;
           move = false;
@@ -332,7 +332,6 @@ void checkGame() {
         win_check1 = win_check1+1;
 
         if (win_check1 == 4) {
-          end = true;
           winner1 = true;
           winner2 = false;
           game_screen = 3;
@@ -345,7 +344,6 @@ void checkGame() {
         win_check2 = win_check2+1;
 
         if (win_check2 == 4) {
-          end = true;
           winner1 = false;
           winner2 = true;
           game_screen = 3;
@@ -363,7 +361,6 @@ void checkGame() {
         win_check1 = win_check1+1;
 
         if (win_check1 == 4) {
-          end = true;
           winner1 = true;
           winner2 = false;
           game_screen = 3;
@@ -376,7 +373,6 @@ void checkGame() {
         win_check2 = win_check2+1;
 
         if (win_check2 == 4) {
-          end = true;
           winner1 = false;
           winner2 = true;
           game_screen = 3;
@@ -414,14 +410,17 @@ void endGame() {
     text("El jugador 1 gana", width/2, height/2);
     image(img_piece1, 150, pos_piece);
     image(img_piece1, 800, pos_piece);
+    end = true;
   } else if (winner2) {
     text("El jugador 2 gana", width/2, height/2);
     image(img_piece2, 150, pos_piece);
     image(img_piece2, 800, pos_piece);
+    end = true;
   } else {
     text("Tablas", width/2, height/2);
     image(img_piece1, 150, pos_piece);
     image(img_piece2, 800, pos_piece);
+    end = true;
   }
 }
 
@@ -455,7 +454,7 @@ void drawTable() {
 
   // Guardar fichas caidas
   for (int c=0; c<7; c++) {
-    for (int r=0; r<6; r++) {
+    for (int r=0; r<7; r++) {
       if (table[c][r] == 1) {
         image(img_piece1, (c+2)*80-40, 569-70*(r+1));
       } else if (table[c][r] == 2) {
@@ -488,43 +487,30 @@ public void mousePressed() {
   if (btn_exit) {
     exit();
   }
-  if (btn_home) {
+  if (btn_home || end) {
     game_screen = 0;
+    pos_btn1 = 0;
+    pos_btn2 = 856;
     move = false;
     select = false;
     player = true;
+    winner1 = false;
+    winner2 = false;
     end = false;
     locked = 1;
-    fichas_j1 = 10;
-    fichas_j2 = 10;
     win_check1 = 0;
     win_check2 = 0;
+    fichas_j1 = 2;
+    fichas_j2 = 2;
     row = 0;
     posY = 60;
 
     for (int c=0; c<7; c++) {
-      for (int r=0; r<6; r++) {
+      for (int r=0; r<7; r++) {
         table[c][r]= 0;
       }
     }
   }
-  if (end) {
-    game_screen = 3;
-    move = false;
-    select = false;
-    player = true;
-    locked = 1;
-    fichas_j1 = 10;
-    fichas_j2 = 10;
-    row = 0;
-    posY = 60;
-
-    for (int c=0; c<7; c++) {
-      for (int r=0; r<6; r++) {
-        table[c][r]= 0;
-      }
-    }
-  } 
   if (select) {
     move = true;
   }
