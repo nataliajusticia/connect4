@@ -25,7 +25,7 @@ int counter;
 PFont font;
 //
 // Tablero de juego
-int[][] table = new int[7][6];
+int[][] table = new int[7][7];
 //
 // Jugadores
 boolean move = false;
@@ -147,12 +147,6 @@ void initScreen() {
   } else {
     btn_exit = false;
   }
-
-  for (int i=0; i<7; i++) {
-    for (int j=0; j<6; j++) {
-      table[i][j]= 0;
-    }
-  }
 }
 
 /**
@@ -220,7 +214,7 @@ void gameScreen() {
         }
         image(img_piece1, posX, posY);
 
-        for (int i=0; i<6; i++) {
+        for (int i=0; i<7; i++) {
           if (table[column][i] == 1 || table[column][i] == 2) {
             locked = i+2;
             row = i+1;
@@ -295,7 +289,7 @@ void gameScreen() {
           break;
         }
         image(img_piece2, posX, posY);
-        for (int i=0; i<6; i++) {
+        for (int i=0; i<7; i++) {
           if (table[column][i] == 1 || table[column][i] == 2) {
             locked = i+2;
             row = i+1;
@@ -328,7 +322,7 @@ void checkGame() {
 
   // 4 en raya vertical
   for (int i=0; i<7; i++) {
-    for (int j=0; j<6; j++) {
+    for (int j=0; j<7; j++) {
       if (table[i][j] == 1) {
         win_check1 = win_check1+1;
 
@@ -352,6 +346,32 @@ void checkGame() {
     }
   }
 
+  // 4 en raya horizontal
+  for (int i=0; i<7; i++) {
+    for (int j=0; j<7; j++) {
+      if (table[j][i] == 1) {
+        win_check1 = win_check1+1;
+
+        if (win_check1 == 4) {
+          winner1 = true;
+          winner2 = false;
+          game_screen = 3;
+        }
+      } else if (table[j][i] == 2) {
+        win_check2 = win_check2+1;
+
+        if (win_check2 == 4) {
+          winner1 = false;
+          winner2 = true;
+          game_screen = 3;
+        }
+      } else {
+        win_check1 = 0;
+        win_check2 = 0;
+      }
+    }
+  }
+
   gameScreen();
 }
 
@@ -359,12 +379,6 @@ void checkGame() {
  * Función endGame()
  */
 void endGame() {
-  for (int i=0; i<7; i++) {
-    for (int j=0; j<6; j++) {
-      table[i][j]= 0;
-    }
-  }
-
   // Botón
   image(img_btn_home, 900, 20);
   if (mouseX >= 900 && mouseX <= 900+50 && mouseY >= 20 && mouseY <= 20+50) {
@@ -413,7 +427,7 @@ void drawTable() {
   // Tablero
   for (int c=0; c<7; c++) {
     for (int r=0; r<6; r++) {
-      fill(255);
+      fill(240, 247, 255);
       ellipse(151+c*80, 180+r*70, 62, 62);
     }
   }
@@ -460,9 +474,17 @@ public void mousePressed() {
     locked = 1;
     fichas_j1 = 10;
     fichas_j2 = 10;
+    win_check1 = 0;
+    win_check2 = 0;
     row = 0;
     posY = 60;
     game_screen = 0;
+
+    for (int c=0; c<7; c++) {
+      for (int r=0; r<6; r++) {
+        table[c][r]= 0;
+      }
+    }
   }
   if (select) {
     move = true;
