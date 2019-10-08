@@ -33,6 +33,7 @@ boolean select = false;
 boolean player = true;
 boolean winner1 = false;
 boolean winner2 = false;
+boolean end = false;
 int locked = 1;
 int win_check1 = 0;
 int win_check2 = 0;
@@ -220,7 +221,7 @@ void gameScreen() {
             row = r+1;
           }
         }
-        
+
         if (posY < 500-60*locked) {
           posY = posY+35;
         } else {
@@ -290,14 +291,14 @@ void gameScreen() {
           break;
         }
         image(img_piece2, posX, posY);
-        
+
         for (int r=0; r<7; r++) {
           if (table[column][r] == 1 || table[column][r] == 2) {
             locked = r+2;
             row = r+1;
           }
         }
-        
+
         if (posY < 500-60*locked) {
           posY = posY+35;
         } else {
@@ -331,20 +332,25 @@ void checkGame() {
         win_check1 = win_check1+1;
 
         if (win_check1 == 4) {
+          end = true;
           winner1 = true;
           winner2 = false;
           game_screen = 3;
         }
-      } else if (table[i][j] == 2) {
+      } else {
+        win_check1 = 0;
+      }
+
+      if (table[i][j] == 2) {
         win_check2 = win_check2+1;
 
         if (win_check2 == 4) {
+          end = true;
           winner1 = false;
           winner2 = true;
           game_screen = 3;
         }
       } else {
-        win_check1 = 0;
         win_check2 = 0;
       }
     }
@@ -357,20 +363,25 @@ void checkGame() {
         win_check1 = win_check1+1;
 
         if (win_check1 == 4) {
+          end = true;
           winner1 = true;
           winner2 = false;
           game_screen = 3;
         }
-      } else if (table[j][i] == 2) {
+      } else {
+        win_check1 = 0;
+      }
+
+      if (table[j][i] == 2) {
         win_check2 = win_check2+1;
 
         if (win_check2 == 4) {
+          end = true;
           winner1 = false;
           winner2 = true;
           game_screen = 3;
         }
       } else {
-        win_check1 = 0;
         win_check2 = 0;
       }
     }
@@ -395,20 +406,22 @@ void endGame() {
   rect(0, height/2.8, width, 155);
   fill(255);
 
-  // Titulo del juego
+  // Titulo de fin de juego
   textAlign(CENTER);
-  textSize(60);
+  textSize(50);
 
   if (winner1) {
     text("El jugador 1 gana", width/2, height/2);
     image(img_piece1, 150, pos_piece);
-    image(img_piece1, 788, pos_piece);
+    image(img_piece1, 800, pos_piece);
   } else if (winner2) {
     text("El jugador 2 gana", width/2, height/2);
     image(img_piece2, 150, pos_piece);
-    image(img_piece2, 788, pos_piece);
+    image(img_piece2, 800, pos_piece);
   } else {
     text("Tablas", width/2, height/2);
+    image(img_piece1, 150, pos_piece);
+    image(img_piece2, 800, pos_piece);
   }
 }
 
@@ -476,9 +489,11 @@ public void mousePressed() {
     exit();
   }
   if (btn_home) {
+    game_screen = 0;
     move = false;
     select = false;
     player = true;
+    end = false;
     locked = 1;
     fichas_j1 = 10;
     fichas_j2 = 10;
@@ -486,7 +501,6 @@ public void mousePressed() {
     win_check2 = 0;
     row = 0;
     posY = 60;
-    game_screen = 0;
 
     for (int c=0; c<7; c++) {
       for (int r=0; r<6; r++) {
@@ -494,6 +508,23 @@ public void mousePressed() {
       }
     }
   }
+  if (end) {
+    game_screen = 3;
+    move = false;
+    select = false;
+    player = true;
+    locked = 1;
+    fichas_j1 = 10;
+    fichas_j2 = 10;
+    row = 0;
+    posY = 60;
+
+    for (int c=0; c<7; c++) {
+      for (int r=0; r<6; r++) {
+        table[c][r]= 0;
+      }
+    }
+  } 
   if (select) {
     move = true;
   }
