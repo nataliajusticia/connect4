@@ -214,12 +214,13 @@ void gameScreen() {
         }
         image(img_piece1, posX, posY);
 
-        for (int i=0; i<7; i++) {
-          if (table[column][i] == 1 || table[column][i] == 2) {
-            locked = i+2;
-            row = i+1;
+        for (int r=0; r<7; r++) {
+          if (table[column][r] == 1 || table[column][r] == 2) {
+            locked = r+2;
+            row = r+1;
           }
         }
+        
         if (posY < 500-60*locked) {
           posY = posY+35;
         } else {
@@ -289,12 +290,14 @@ void gameScreen() {
           break;
         }
         image(img_piece2, posX, posY);
-        for (int i=0; i<7; i++) {
-          if (table[column][i] == 1 || table[column][i] == 2) {
-            locked = i+2;
-            row = i+1;
+        
+        for (int r=0; r<7; r++) {
+          if (table[column][r] == 1 || table[column][r] == 2) {
+            locked = r+2;
+            row = r+1;
           }
         }
+        
         if (posY < 500-60*locked) {
           posY = posY+35;
         } else {
@@ -317,6 +320,7 @@ void gameScreen() {
 
 /**
  * Función checkGame()
+ * Metodo para comprovar si hay 4 en raya
  */
 void checkGame() {
 
@@ -397,8 +401,12 @@ void endGame() {
 
   if (winner1) {
     text("El jugador 1 gana", width/2, height/2);
+    image(img_piece1, 150, pos_piece);
+    image(img_piece1, 788, pos_piece);
   } else if (winner2) {
     text("El jugador 2 gana", width/2, height/2);
+    image(img_piece2, 150, pos_piece);
+    image(img_piece2, 788, pos_piece);
   } else {
     text("Tablas", width/2, height/2);
   }
