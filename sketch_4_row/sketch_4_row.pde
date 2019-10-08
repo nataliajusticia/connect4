@@ -10,7 +10,7 @@ int game_screen = 0;
 // Posiciones
 int pos_btn1 = 0;
 int pos_btn2 = 856;
-int pos_piece = 0;
+int pos_chip = 0;
 // 
 // Btn: inicio del juego
 // Btn: salir
@@ -28,17 +28,17 @@ PFont font;
 int[][] table = new int[7][7];
 //
 // Jugadores
+boolean player = true;
 boolean move = false;
 boolean select = false;
-boolean player = true;
 boolean winner1 = false;
 boolean winner2 = false;
 boolean end = false;
 int locked = 1;
 int win_check1 = 0;
 int win_check2 = 0;
-int fichas_j1 = 10;
-int fichas_j2 = 10;
+int chip_j1 = 10;
+int chip_j2 = 10;
 int column;
 int row = 0;
 int posX;
@@ -52,8 +52,8 @@ PImage img_btn_exit;
 PImage img_btn_exit_hover;
 PImage img_btn_home;
 PImage img_btn_home_hover;
-PImage img_piece1;
-PImage img_piece2;
+PImage img_chip1;
+PImage img_chip2;
 
 /***************************************
  FUNCIONES DE INICIO
@@ -113,11 +113,11 @@ void initScreen() {
   textSize(60);
   if (counter < text_title.length())
     counter++;
-    shadowText(text_title.substring(0, counter), width/2, height/2, 3);
+  shadowText(text_title.substring(0, counter), width/2, height/2, 3);
 
   // Fichas del juego
-  image(img_piece1, 150, pos_piece);
-  image(img_piece2, 800, pos_piece);
+  image(img_chip1, 150, pos_chip);
+  image(img_chip2, 800, pos_chip);
 
   // Botones pantalla inicial
   image(img_btn_start, pos_btn1, height/1.5);
@@ -130,8 +130,8 @@ void initScreen() {
   if (pos_btn2 > width/2.3) {
     pos_btn2 = pos_btn2-15;
   }
-  if (pos_piece < height/2.4) {
-    pos_piece = pos_piece+10;
+  if (pos_chip < height/2.4) {
+    pos_chip = pos_chip+10;
   }
 
   // Funcionalidad botón
@@ -159,13 +159,14 @@ void gameScreen() {
 
   row = 0;
 
+  // Juego por turnos - empieza jugador 1
   if (player == true) {
     fill(52, 73, 94);
     text("Turno del Jugador 1", 800, 50);
 
     if (mouseX > 120 && mouseX < 660 || move == true) {
       if (move == false) {
-        image(img_piece1, mouseX-31, posY);
+        image(img_chip1, mouseX-31, posY);
 
         if (mouseX > 120 && mouseX < 180) {
           select = true;
@@ -213,7 +214,7 @@ void gameScreen() {
           posX = 600;
           break;
         }
-        image(img_piece1, posX, posY);
+        image(img_chip1, posX, posY);
 
         for (int r=0; r<7; r++) {
           if (table[column][r] == 1 || table[column][r] == 2) {
@@ -225,7 +226,7 @@ void gameScreen() {
         if (posY < 500-60*locked) {
           posY = posY+30;
         } else {
-          fichas_j1 = fichas_j1 - 1;
+          chip_j1 = chip_j1 - 1;
           move = false;
           select = false;
           player = false;
@@ -242,7 +243,7 @@ void gameScreen() {
 
     if (mouseX > 120 && mouseX < 660  || move == true) {
       if (move == false) {
-        image(img_piece2, mouseX-31, posY);
+        image(img_chip2, mouseX-31, posY);
 
         if (mouseX > 120 && mouseX < 180) {
           select = true;
@@ -290,7 +291,7 @@ void gameScreen() {
           posX = 600;
           break;
         }
-        image(img_piece2, posX, posY);
+        image(img_chip2, posX, posY);
 
         for (int r=0; r<7; r++) {
           if (table[column][r] == 1 || table[column][r] == 2) {
@@ -302,7 +303,7 @@ void gameScreen() {
         if (posY < 500-60*locked) {
           posY = posY+30;
         } else {
-          fichas_j2 = fichas_j2 - 1;
+          chip_j2 = chip_j2 - 1;
           move = false;
           select = false;
           player = true;
@@ -314,7 +315,7 @@ void gameScreen() {
       }
     }
   }
-  if (fichas_j1 == 0 && fichas_j2 == 0) {
+  if (chip_j1 == 0 && chip_j2 == 0) {
     game_screen = 3;
   }
 }
@@ -324,11 +325,12 @@ void gameScreen() {
  * Metodo para comprovar si hay 4 en raya
  */
 void checkGame() {
-
-  // 4 en raya vertical
-  for (int i=0; i<7; i++) {
-    for (int j=0; j<7; j++) {
-      if (table[i][j] == 1) {
+  
+  // 4 en raya horizontal
+  for (int c=0; c<7; c++) {
+    for (int r=0; r<7; r++) {
+      // Jugador 1
+      if (table[r][c] == 1) {
         win_check1 = win_check1+1;
 
         if (win_check1 == 4) {
@@ -339,8 +341,38 @@ void checkGame() {
       } else {
         win_check1 = 0;
       }
+      // Jugador 2
+      if (table[r][c] == 2) {
+        win_check2 = win_check2+1;
 
-      if (table[i][j] == 2) {
+        if (win_check2 == 4) {
+          winner1 = false;
+          winner2 = true;
+          game_screen = 3;
+        }
+      } else {
+        win_check2 = 0;
+      }
+    }
+  }
+  
+  // 4 en raya vertical
+  for (int c=0; c<7; c++) {
+    for (int r=0; r<7; r++) {
+      // Jugador 1
+      if (table[c][r] == 1) {
+        win_check1 = win_check1+1;
+
+        if (win_check1 == 4) {
+          winner1 = true;
+          winner2 = false;
+          game_screen = 3;
+        }
+      } else {
+        win_check1 = 0;
+      }
+      // Jugador 2
+      if (table[c][r] == 2) {
         win_check2 = win_check2+1;
 
         if (win_check2 == 4) {
@@ -354,31 +386,75 @@ void checkGame() {
     }
   }
 
-  // 4 en raya horizontal
-  for (int i=0; i<7; i++) {
-    for (int j=0; j<7; j++) {
-      if (table[j][i] == 1) {
-        win_check1 = win_check1+1;
+  // 4 en raya diagonal
+  for (int c=0; c<7; c++) {
+    int aux_col = c;
+    for (int r=0; r<7; r++) {
+      if (c<7) { 
+        // Jugador 1
+        if (table[c][r] == 1) {
+          win_check1 = win_check1+1;
+          c++;
 
-        if (win_check1 == 4) {
-          winner1 = true;
-          winner2 = false;
-          game_screen = 3;
+          if (win_check1 == 4) {
+            winner1 = true;
+            winner2 = false;
+            game_screen = 3;
+          }
+        } 
+        // Jugador 2
+        else if (table[c][r] == 2) {
+          win_check2 = win_check2+1;
+          c++;
+
+          if (win_check2 == 4) {
+            winner1 = false;
+            winner2 = true;
+            game_screen = 3;
+          }
+        } else {
+          win_check1 = 0;
+          win_check2 = 0;
+          c = aux_col;
         }
       } else {
-        win_check1 = 0;
+        c = aux_col;
       }
+    }
+  }
 
-      if (table[j][i] == 2) {
-        win_check2 = win_check2+1;
+  for (int c=0; c<7; c++) {
+    int aux_col = c;
+    for (int r=0; r<7; r++) {
+      if (c>-1) {
+        // Jugador 1
+        if (table[c][r] == 1) {
+          win_check1 = win_check1+1;
+          c--;
 
-        if (win_check2 == 4) {
-          winner1 = false;
-          winner2 = true;
-          game_screen = 3;
+          if (win_check1 == 4) {
+            winner1 = true;
+            winner2 = false;
+            game_screen = 3;
+          }
+        } 
+        // Jugador 2
+        else if (table[c][r] == 2) {
+          win_check2 = win_check2+1;
+          c--;
+
+          if (win_check2 == 4) {
+            winner1 = false;
+            winner2 = true;
+            game_screen = 3;
+          }
+        } else {
+          win_check1 = 0;
+          win_check2 = 0;
+          c = aux_col;
         }
       } else {
-        win_check2 = 0;
+        c = aux_col;
       }
     }
   }
@@ -408,18 +484,18 @@ void endGame() {
 
   if (winner1) {
     text("El jugador 1 gana", width/2, height/2);
-    image(img_piece1, 150, pos_piece);
-    image(img_piece1, 800, pos_piece);
+    image(img_chip1, 150, pos_chip);
+    image(img_chip1, 800, pos_chip);
     end = true;
   } else if (winner2) {
     text("El jugador 2 gana", width/2, height/2);
-    image(img_piece2, 150, pos_piece);
-    image(img_piece2, 800, pos_piece);
+    image(img_chip2, 150, pos_chip);
+    image(img_chip2, 800, pos_chip);
     end = true;
   } else {
     text("Tablas", width/2, height/2);
-    image(img_piece1, 150, pos_piece);
-    image(img_piece2, 800, pos_piece);
+    image(img_chip1, 150, pos_chip);
+    image(img_chip2, 800, pos_chip);
     end = true;
   }
 }
@@ -456,19 +532,19 @@ void drawTable() {
   for (int c=0; c<7; c++) {
     for (int r=0; r<7; r++) {
       if (table[c][r] == 1) {
-        image(img_piece1, (c+2)*80-40, 569-70*(r+1));
+        image(img_chip1, (c+2)*80-40, 569-70*(r+1));
       } else if (table[c][r] == 2) {
-        image(img_piece2, (c+2)*80-40, 569-70*(r+1));
+        image(img_chip2, (c+2)*80-40, 569-70*(r+1));
       }
     }
   }
 
   // Fichas
-  for (int i=1; i<=fichas_j1; i++) {
-    image(img_piece1, 750, 200+20*i);
+  for (int i=1; i<=chip_j1; i++) {
+    image(img_chip1, 750, 200+20*i);
   }
-  for (int i=1; i<=fichas_j2; i++) {
-    image(img_piece2, 850, 200+20*i);
+  for (int i=1; i<=chip_j2; i++) {
+    image(img_chip2, 850, 200+20*i);
   }
 }
 
@@ -500,8 +576,8 @@ public void mousePressed() {
     locked = 1;
     win_check1 = 0;
     win_check2 = 0;
-    fichas_j1 = 2;
-    fichas_j2 = 2;
+    chip_j1 = 10;
+    chip_j2 = 10;
     row = 0;
     posY = 60;
 
@@ -535,6 +611,6 @@ void loadImg() {
   img_btn_exit_hover = loadImage("btn_exit2.png");
   img_btn_home = loadImage("btn_home.png");
   img_btn_home_hover = loadImage("btn_home2.png");
-  img_piece1 = loadImage("ficha_1.png");
-  img_piece2 = loadImage("ficha_2.png");
+  img_chip1 = loadImage("ficha_1.png");
+  img_chip2 = loadImage("ficha_2.png");
 }
