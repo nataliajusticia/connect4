@@ -172,49 +172,33 @@ void gameScreen() {
         if (mouseX > 120 && mouseX < 180) {
           select = true;
           column = 0;
+          posX = 120;
         } else if (mouseX > 200 && mouseX < 260) {
           select = true;
           column = 1;
+          posX = 200;
         } else if (mouseX > 280 && mouseX < 340) {
           select = true;
           column = 2;
+          posX = 280;
         } else if (mouseX > 360 && mouseX < 420) {
           select = true;
           column = 3;
+          posX = 360;
         } else if (mouseX > 440 && mouseX < 500) {
           select = true;
           column = 4;
+          posX = 440;
         } else if (mouseX > 520 && mouseX < 580) {
           select = true;
           column = 5;
+          posX = 520;
         } else if (mouseX > 600 && mouseX < 660) {
           select = true;
           column = 6;
+          posX = 600;
         }
       } else {
-        switch (column) {
-        case 0:
-          posX = 120;
-          break;
-        case 1:
-          posX = 200;
-          break;
-        case 2:
-          posX = 280;
-          break;
-        case 3:
-          posX = 360;
-          break;
-        case 4:
-          posX = 440;
-          break;
-        case 5:
-          posX = 520;
-          break;
-        case 6:
-          posX = 600;
-          break;
-        }
         image(img_chip1, posX, posY);
 
         for (int r=0; r<7; r++) {
@@ -249,50 +233,33 @@ void gameScreen() {
 
         if (mouseX > 120 && mouseX < 180) {
           select = true;
-          column = 0;
+          posX = 120;
         } else if (mouseX > 200 && mouseX < 260) {
           select = true;
           column = 1;
+          posX = 200;
         } else if (mouseX > 280 && mouseX < 340) {
           select = true;
           column = 2;
+          posX = 280;
         } else if (mouseX > 360 && mouseX < 420) {
           select = true;
           column = 3;
+          posX = 360;
         } else if (mouseX > 440 && mouseX < 500) {
           select = true;
           column = 4;
+          posX = 440;
         } else if (mouseX > 520 && mouseX < 580) {
           select = true;
           column = 5;
+          posX = 520;
         } else if (mouseX > 600 && mouseX < 660) {
           select = true;
           column = 6;
+          posX = 600;
         }
       } else {
-        switch (column) {
-        case 0:
-          posX = 120;
-          break;
-        case 1:
-          posX = 200;
-          break;
-        case 2:
-          posX = 280;
-          break;
-        case 3:
-          posX = 360;
-          break;
-        case 4:
-          posX = 440;
-          break;
-        case 5:
-          posX = 520;
-          break;
-        case 6:
-          posX = 600;
-          break;
-        }
         image(img_chip2, posX, posY);
 
         for (int r=0; r<7; r++) {
