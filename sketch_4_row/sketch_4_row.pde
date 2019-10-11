@@ -37,8 +37,8 @@ boolean end = false;
 int locked = 1;
 int win_check1 = 0;
 int win_check2 = 0;
-int chip_j1 = 10;
-int chip_j2 = 10;
+int chip_j1 = 12;
+int chip_j2 = 12;
 int column;
 int row = 0;
 int posX;
@@ -162,6 +162,7 @@ void gameScreen() {
   // Juego por turnos - empieza jugador 1
   if (player == true) {
     fill(52, 73, 94);
+    textSize(14);
     text("Turno del Jugador 1", 800, 50);
 
     if (mouseX > 120 && mouseX < 660 || move == true) {
@@ -239,6 +240,7 @@ void gameScreen() {
     }
   } else {
     fill(52, 73, 94);
+    textSize(14);
     text("Turno del Jugador 2", 800, 50);
 
     if (mouseX > 120 && mouseX < 660  || move == true) {
@@ -315,6 +317,7 @@ void gameScreen() {
       }
     }
   }
+  // Si los jugadores se quedan sin fichas se acaba el juego
   if (chip_j1 == 0 && chip_j2 == 0) {
     game_screen = 3;
   }
@@ -519,6 +522,19 @@ void drawTable() {
   } else {
     btn_home = false;
   }
+  
+  // Fichas
+  for (int i=1; i<=chip_j1; i++) {
+    image(img_chip1, 750, 180+20*i);
+  }
+  for (int i=1; i<=chip_j2; i++) {
+    image(img_chip2, 850, 180+20*i);
+  }
+  
+  // Mostrar n° fichas disponibles
+  textSize(20);
+  text(chip_j1, 780, 520);
+  text(chip_j2, 880, 520);
 
   // Tablero
   for (int c=0; c<7; c++) {
@@ -537,14 +553,6 @@ void drawTable() {
         image(img_chip2, (c+2)*80-40, 569-70*(r+1));
       }
     }
-  }
-
-  // Fichas
-  for (int i=1; i<=chip_j1; i++) {
-    image(img_chip1, 750, 200+20*i);
-  }
-  for (int i=1; i<=chip_j2; i++) {
-    image(img_chip2, 850, 200+20*i);
   }
 }
 
@@ -576,8 +584,8 @@ public void mousePressed() {
     locked = 1;
     win_check1 = 0;
     win_check2 = 0;
-    chip_j1 = 10;
-    chip_j2 = 10;
+    chip_j1 = 12;
+    chip_j2 = 12;
     row = 0;
     posY = 60;
 
