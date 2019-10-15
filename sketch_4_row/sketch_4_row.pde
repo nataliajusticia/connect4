@@ -233,6 +233,7 @@ void gameScreen() {
 
         if (mouseX > 120 && mouseX < 180) {
           select = true;
+          column = 0;
           posX = 120;
         } else if (mouseX > 200 && mouseX < 260) {
           select = true;
