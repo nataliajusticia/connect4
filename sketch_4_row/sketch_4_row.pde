@@ -1,4 +1,16 @@
 /***************************************
+ LIBRERIA MINIM
+ ***************************************/
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+import ddf.minim.effects.*;
+import ddf.minim.signals.*;
+import ddf.minim.spi.*;
+import ddf.minim.ugens.*;
+
+Minim minim;
+
+/***************************************
  VARIABLES 
  ***************************************/
 // 
@@ -54,6 +66,12 @@ PImage img_btn_home;
 PImage img_btn_home_hover;
 PImage img_chip1;
 PImage img_chip2;
+//
+// Sonido
+AudioPlayer sound_bg_game;
+AudioSample sound_chip;
+AudioSample sound_win;
+AudioSample sound_no_win;
 
 /***************************************
  FUNCIONES DE INICIO
@@ -67,6 +85,15 @@ void setup() {
   frameRate(30);
   smooth();
   loadImg();
+  
+  // Inizializar la libreria minim y sus sonidos
+  minim = new Minim(this);
+  sound_bg_game = minim.loadFile("bg-game.wav", 512);
+  sound_bg_game.setGain(-10.0);
+  sound_bg_game.loop();
+  sound_chip = minim.loadSample("chip-sound.wav");
+  sound_win = minim.loadSample("win-sound.mp3");
+  sound_no_win = minim.loadSample("no-win-sound.mp3");
 }
 
 /**
@@ -158,6 +185,8 @@ void gameScreen() {
   drawTable();
 
   row = 0;
+  
+  sound_bg_game.setGain(-15.0);
 
   // Juego por turnos - empieza jugador 1
   if (player == true) {
@@ -211,6 +240,9 @@ void gameScreen() {
         if (posY < 500-60*locked) {
           posY = posY+30;
         } else {
+          // Sonido caer ficha
+          sound_chip.trigger();
+          
           chip_j1 = chip_j1 - 1;
           move = false;
           select = false;
@@ -273,6 +305,9 @@ void gameScreen() {
         if (posY < 500-60*locked) {
           posY = posY+30;
         } else {
+          // Sonido caer ficha
+          sound_chip.trigger();
+          
           chip_j2 = chip_j2 - 1;
           move = false;
           select = false;
@@ -287,6 +322,7 @@ void gameScreen() {
   }
   // Si los jugadores se quedan sin fichas se acaba el juego
   if (chip_j1 == 0 && chip_j2 == 0) {
+    sound_no_win.trigger();
     game_screen = 3;
   }
 }
@@ -296,7 +332,6 @@ void gameScreen() {
  * Metodo para comprovar si hay 4 en raya
  */
 void checkGame() {
-  
   // 4 en raya horizontal
   for (int c=0; c<7; c++) {
     for (int r=0; r<7; r++) {
@@ -308,6 +343,7 @@ void checkGame() {
           winner1 = true;
           winner2 = false;
           game_screen = 3;
+          sound_win.trigger();
         }
       } else {
         win_check1 = 0;
@@ -320,6 +356,7 @@ void checkGame() {
           winner1 = false;
           winner2 = true;
           game_screen = 3;
+          sound_win.trigger();
         }
       } else {
         win_check2 = 0;
@@ -338,6 +375,7 @@ void checkGame() {
           winner1 = true;
           winner2 = false;
           game_screen = 3;
+          sound_win.trigger();
         }
       } else {
         win_check1 = 0;
@@ -350,6 +388,7 @@ void checkGame() {
           winner1 = false;
           winner2 = true;
           game_screen = 3;
+          sound_win.trigger();
         }
       } else {
         win_check2 = 0;
@@ -371,6 +410,7 @@ void checkGame() {
             winner1 = true;
             winner2 = false;
             game_screen = 3;
+            sound_win.trigger();
           }
         } 
         // Jugador 2
@@ -382,6 +422,7 @@ void checkGame() {
             winner1 = false;
             winner2 = true;
             game_screen = 3;
+            sound_win.trigger();
           }
         } else {
           win_check1 = 0;
@@ -407,6 +448,7 @@ void checkGame() {
             winner1 = true;
             winner2 = false;
             game_screen = 3;
+            sound_win.trigger();
           }
         } 
         // Jugador 2
@@ -418,6 +460,7 @@ void checkGame() {
             winner1 = false;
             winner2 = true;
             game_screen = 3;
+            sound_win.trigger();
           }
         } else {
           win_check1 = 0;
