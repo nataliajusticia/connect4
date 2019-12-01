@@ -89,7 +89,6 @@ void setup() {
   // Inizializar la libreria minim y sus sonidos
   minim = new Minim(this);
   sound_bg_game = minim.loadFile("bg-game.wav", 512);
-  sound_bg_game.setGain(-10.0);
   sound_bg_game.loop();
   sound_chip = minim.loadSample("chip-sound.wav");
   sound_win = minim.loadSample("win-sound.mp3");
@@ -320,11 +319,6 @@ void gameScreen() {
       }
     }
   }
-  // Si los jugadores se quedan sin fichas se acaba el juego
-  if (chip_j1 == 0 && chip_j2 == 0) {
-    sound_no_win.trigger();
-    game_screen = 3;
-  }
 }
 
 /**
@@ -472,6 +466,11 @@ void checkGame() {
       }
     }
   }
+  
+   if (chip_j2 == 0 && winner1 == false && winner2 == false) {
+    sound_no_win.trigger();
+    game_screen = 3;
+  } 
 
   gameScreen();
 }
